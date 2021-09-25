@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`pedido_detalle` (
   `FechaEliminado` DATETIME NULL DEFAULT NULL,
   `pedido_Id` INT(11) NOT NULL,
   `modelo_Id1` INT(11) NOT NULL,
+  `Cantidad_modelo` INT(11) NOT NULL,
   PRIMARY KEY (`Id`, `modelo_Id`),
   CONSTRAINT `fk_pedido_detalle_pedido1`
     FOREIGN KEY (`pedido_Id`)
