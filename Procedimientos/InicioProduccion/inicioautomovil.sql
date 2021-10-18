@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inicioAutomovil`(IN Paramchasis VARCHAR(45),out msg VARCHAR(125), out VarFechaInicio datetime)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `inicioAutomovil`(IN Paramchasis VARCHAR(45),out cMensaje VARCHAR(125), out nResultado int)
 BEGIN
 
 
@@ -7,55 +7,67 @@ DECLARE VarAutoId INT;
 DECLARE VarIngreso DATETIME default NULL;
 DECLARE VarEgreso DATETIME default NULL;
 DECLARE VarAutoEnEstacion INT default NULL;
+DECLARE VarEliminado INT default 0;
 
-set msg = "";
+DECLARE VarFechaInicio DATETIME default NULL;
+DECLARE VarFechaElim DATETIME default NULL;
 
-select Id, FechaInicio into VarAutoId, VarFechaInicio 
+set cMensaje = "";
+
+select Id, FechaInicio, Eliminado, FechaEliminado into VarAutoId, VarFechaInicio, VarEliminado, VarFechaElim
 from automovil
 where Chasis = Paramchasis;
 
 PROCLABEL: BEGIN
 IF VarAutoId IS NOT NULL THEN
-	set msg = 'existe auto';
-    IF VarFechaInicio IS NULL THEN
-		set msg = 'no esta iniciado, chequeo estacion';
-        
-        select IdEstacion from (
-        select min(e.OrdenEstacion) AS IdPrimeraEstacion, e.Id AS IdEstacion from estacion e 
-		inner join linea_montaje li on e.linea_montaje_Id = li.Id
-		inner join modelo mo on mo.linea_montaje_Id = li.Id
-		inner join automovil au on mo.Id = au.pedido_detalle_modelo_Id
-		where au.Id = VarAutoId) as t 
-        INTO VarEstacionInicioId;
-         
-         select max(FechaIngresoEstacion), FechaEgresoEstacion, automovil_Id from automovil_estacion aue 
-         where aue.estacion_Id = VarEstacionInicioId
-         into VarIngreso, VarEgreso, VarAutoEnEstacion;
-         
-		IF VarEgreso IS NOT NULL OR VarIngreso IS NULL THEN
-         
-			START transaction;
-            insert into automovil_estacion(FechaIngresoEstacion, Eliminado, estacion_Id, automovil_Id)
-            VALUES(now(),0,VarEstacionInicioId,VarAutoId);
+	IF VarEliminado = 0 THEN
+		IF VarFechaInicio IS NULL THEN
+			set cMensaje = 'no esta iniciado, chequeo estacion';
 			
-            update automovil set FechaInicio = now() where automovil.Id = VarAutoId;
+			select IdEstacion from (
+			select min(e.OrdenEstacion) AS IdPrimeraEstacion, e.Id AS IdEstacion from estacion e 
+			inner join linea_montaje li on e.linea_montaje_Id = li.Id
+			inner join modelo mo on mo.linea_montaje_Id = li.Id
+			inner join automovil au on mo.Id = au.pedido_detalle_modelo_Id
+			where au.Id = VarAutoId) as t 
+			INTO VarEstacionInicioId;
+			 
+			 select max(FechaIngresoEstacion), FechaEgresoEstacion, automovil_Id from automovil_estacion aue 
+			 where aue.estacion_Id = VarEstacionInicioId
+			 into VarIngreso, VarEgreso, VarAutoEnEstacion;
+			 
+			IF VarEgreso IS NOT NULL OR VarIngreso IS NULL THEN
+			 
+				START transaction;
+				insert into automovil_estacion(FechaIngresoEstacion, Eliminado, estacion_Id, automovil_Id)
+				VALUES(now(),0,VarEstacionInicioId,VarAutoId);
+				
+				update automovil set FechaInicio = now() where automovil.Id = VarAutoId;
+				
+				set nResultado = 0;
+				set cMensaje = CONCAT('Se inicio correctamente el automovil en el momento ',now(),' Id: ',VarAutoId);
+				COMMIT;
+				
+			ELSE
+				select Chasis from automovil a where a.Id = VarAutoEnEstacion into @chasis;
+				set cMensaje = CONCAT('No se puede iniciar, estacion de automovil ocupada por auto con chasis: ',  @chasis);
+				set nResultado = -1;
+			END IF;
+			 
 			
-            set VarFechaInicio = now();
-            set msg = CONCAT('se introdujo el automovil en el momento ',now(),' Id: ',VarAutoId);
-			COMMIT;
-            
 		ELSE
-        select Chasis from automovil a where a.Id = VarAutoEnEstacion into @chasis;
-		set msg = concat('estacion de automovil ocupada por auto con chasis: ',  @chasis);
-        
+			set cMensaje = CONCAT('No se puede iniciar, el automovil ya fue iniciado en ', VarFechaInicio);
+			set nResultado = -2;
+			LEAVE PROCLABEL;
 		END IF;
-         
-        
-    ELSE
-		set msg = 'ya esta iniciado';
+	ELSE
+		set cMensaje = CONCAT('No se puede iniciar, el automovil fue eliminado en ', VarFechaElim);
+		set nResultado = -3;
         LEAVE PROCLABEL;
     END IF;
 ELSE
+	set cMensaje = CONCAT('No se puede iniciar, no se encontro el auto con Id ',VarAutoId);
+    set nResultado = -4;
 	LEAVE PROCLABEL;
 END IF;
 
