@@ -1,7 +1,7 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CRUD_update_consecionarios`(IN ParamId INT ,IN nombreNuevo VARCHAR(45), OUT nResultado INT, OUT cMensaje VARCHAR(125))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CRUD_update_consecionario`(IN ParamId INT ,IN nombreNuevo VARCHAR(45), OUT nResultado INT, OUT cMensaje VARCHAR(125))
 BEGIN
 DECLARE VarId INT DEFAULT NULL;
-SELECT Id FROM consecionario WHERE Id = ParamId into VarId;
+SELECT Id FROM consecionaria WHERE Id = ParamId into VarId;
 
 IF VarId IS NOT NULL THEN
 	IF consecionariosRepetidos(nombreNuevo) = 0 THEN

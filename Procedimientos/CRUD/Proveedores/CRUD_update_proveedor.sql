@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CRUD_update_proveedores`(IN pId INT, IN pNombre VARCHAR(45), IN pCUIT VARCHAR(45),IN pEliminado BIT, IN pFechaEliminado datetime , OUT nResultado INT, OUT cMensaje VARCHAR(125))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CRUD_update_proveedor`(IN pId INT, IN pNombre VARCHAR(45), IN pCUIT VARCHAR(45),IN pEliminado BIT, IN pFechaEliminado datetime , OUT nResultado INT, OUT cMensaje VARCHAR(125))
 BEGIN
 
 DECLARE VarId INT DEFAULT NULL;

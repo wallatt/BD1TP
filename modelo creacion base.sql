@@ -210,7 +210,6 @@ DROP TABLE IF EXISTS `BD_Consecionaria`.`insumos` ;
 CREATE TABLE IF NOT EXISTS `BD_Consecionaria`.`insumos` (
   `Id` INT(11) NOT NULL AUTO_INCREMENT,
   `Descripcion` VARCHAR(45) NULL DEFAULT NULL,
-  `Cantidad` INT(11) NULL DEFAULT NULL,
   `Eliminado` BIT(1) NULL DEFAULT NULL,
   `FechaEliminado` VARCHAR(45) NULL DEFAULT NULL,
   `unidad_Id` INT(11) NOT NULL,

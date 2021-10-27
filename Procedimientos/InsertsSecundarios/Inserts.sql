@@ -1,4 +1,4 @@
-USE `mydb` ;
+USE `bd_consecionaria` ;
 
 
 INSERT INTO proveedor(Nombre, CUIT,Eliminado)
@@ -17,11 +17,11 @@ VALUES	('Lts',0),
 
 select * from unidad;
 
-insert into insumos(Descripcion, Cantidad, Eliminado, unidad_Id)
-VALUES				('pintura',10,0,1),
-					('aluminio',500,0,2),
-                    ('hierro',100,0,2),
-                    ('alfombra',10,0,4);
+insert into insumos(Descripcion, Eliminado, unidad_Id)
+VALUES				('pintura',0,1),
+					('aluminio',0,2),
+                    ('hierro',0,2),
+                    ('alfombra',0,4);
                     
 select * from insumos;
 
@@ -32,6 +32,7 @@ VALUES		(100,1, (select min(Id)  from proveedor)),
 			(150,2, (select min(Id)+2  from proveedor))
 ;
 
+select * from proveedor_insumos;
 
 insert into linea_montaje(Codigo, Eliminado)
 VALUES					('001A',0),
@@ -79,9 +80,9 @@ select * from insumo_estacion;
 select * from modelo;
 
 
-select ins.Descripcion, Cantidad, un.Descripcion from insumos ins inner join unidad un on ins.unidad_id = un.Id;
+select ins.Descripcion, un.Descripcion from insumos ins inner join unidad un on ins.unidad_id = un.Id;
 
 
-select ins.Descripcion, Cantidad, un.Descripcion , Nombre , Precio from insumos ins inner join unidad un on ins.unidad_id = un.Id inner join proveedor_insumos on insumos_Id = ins.Id inner join proveedor p on p.Id = proveedor_Id;
+select ins.Descripcion, un.Descripcion , Nombre , Precio from insumos ins inner join unidad un on ins.unidad_id = un.Id inner join proveedor_insumos on insumos_Id = ins.Id inner join proveedor p on p.Id = proveedor_Id;
 
 

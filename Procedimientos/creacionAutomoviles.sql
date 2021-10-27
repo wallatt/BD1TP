@@ -18,6 +18,7 @@ SET finished = 1;
 DECLARE CONTINUE HANDLER FOR SQLSTATE '23000'  
 SET finished = 1;  
 
+
 OPEN curDetallePedido;
 
 
@@ -28,7 +29,7 @@ SET nInsertados = 0;
 
 WHILE nInsertados < nCantidadDetalle DO
 
-	call altaVehiculo(idModeloParametro, ParamIdDetalle);
+	call CRUD_alta_vehiculo(idModeloParametro, ParamIdDetalle);
     
 	SET nInsertados = nInsertados +1;
 END WHILE;

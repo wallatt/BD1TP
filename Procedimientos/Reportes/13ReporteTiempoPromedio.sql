@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reporte_timepo_promedio`(IN ParamLineaMontaje INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reporte_tiempo_promedio`(IN ParamLineaMontaje INT)
 BEGIN
 
 

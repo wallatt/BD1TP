@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CRUD_alta_proveedores`(IN pNombre VARCHAR(45), IN pCUIT VARCHAR(45), OUT nResultado INT, OUT cMensaje VARCHAR(125))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CRUD_alta_proveedor`(IN pNombre VARCHAR(45), IN pCUIT VARCHAR(45), OUT nResultado INT, OUT cMensaje VARCHAR(125))
 BEGIN
 
 DECLARE pDuplicado INT;
