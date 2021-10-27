@@ -1,4 +1,4 @@
-CREATE PROCEDURE `delete_automovil` (IN Id_Automovil INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CRUD_delete_vehiculo`(IN Id_Automovil INT)
 BEGIN
 
 update automovil SET

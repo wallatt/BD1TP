@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `altaVehiculo`(IN modeloId INT, IN PedidoDetalleId INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CRUD_alta_vehiculo`(IN modeloId INT, IN PedidoDetalleId INT)
 BEGIN
 
 DECLARE IdAuto INT;
